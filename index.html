@@ -15,7 +15,6 @@
 <body>
     <canvas id="glCanvas"></canvas>
     <script>
-        // Vertex shader program
         const vsSource = `
             attribute vec4 aVertexPosition;
             attribute vec4 aVertexColor;
@@ -29,7 +28,6 @@
             }
         `;
 
-        // Fragment shader program
         const fsSource = `
             varying lowp vec4 vColor;
             
@@ -38,7 +36,6 @@
             }
         `;
 
-        // WebGL context initialization
         function initGL(canvas) {
             const gl = canvas.getContext('webgl');
             if (!gl) {
@@ -48,7 +45,6 @@
             return gl;
         }
 
-        // Shader compilation
         function loadShader(gl, type, source) {
             const shader = gl.createShader(type);
             gl.shaderSource(shader, source);
@@ -63,7 +59,6 @@
             return shader;
         }
 
-        // Create shader program
         function initShaderProgram(gl, vsSource, fsSource) {
             const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
             const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
@@ -81,23 +76,19 @@
             return shaderProgram;
         }
 
-        // Cylinder creation function
-        // Cylinder creation function
+       
         function createCylinder(gl, radius, height, segments) {
             const positions = [];
             const colors = [];
     
-            // Bottom and Top Circle Vertices
             for (let i = 0; i <= segments; i++) {
                 const angle = (2 * Math.PI * i) / segments;
                 const x = radius * Math.cos(angle);
                 const z = radius * Math.sin(angle);
 
-                // Bottom Circle
                 positions.push(x, -height / 2, z);
                 colors.push(0.5, 0.5, 0.5, 1.0);
 
-                // Top Circle
                 positions.push(x, height / 2, z);
                 colors.push(0.5, 0.5, 0.5, 1.0);
             }
@@ -116,14 +107,12 @@
                 const xInner = innerRadius * Math.cos(angle);
                 const zInner = innerRadius * Math.sin(angle);
 
-                // Sisi luar ring
                 positions.push(xOuter, height/2, zOuter);
                 colors.push(0.8, 0.4, 0.1, 1.0);
 
                 positions.push(xOuter, height/2 - 0.1, zOuter);
                 colors.push(0.8, 0.4, 0.1, 1.0);
 
-                // Sisi dalam ring
                 positions.push(xInner, height/2, zInner);
                 colors.push(0.8, 0.4, 0.1, 1.0);
 
@@ -141,7 +130,6 @@
             const positions = [];
             const colors = [];
     
-            // Tambah jumlah segmen untuk detail lebih tinggi
             const latSegments = segments * 2;
             const lonSegments = segments * 2;
 
@@ -154,7 +142,6 @@
                     const z = radius * Math.sin(theta) * Math.sin(phi);
                     positions.push(x, y, z);
                     
-                    // Tambah variasi warna untuk kesan jaring-jaring
                     const colorVariation = Math.abs(Math.sin(lat * 0.5) * Math.cos(lon * 0.5));
                     colors.push(
                         1.0, 
@@ -203,7 +190,6 @@
                 head: { position: headPositionBuffer, color: headColorBuffer }
             };
         }
-        // Main rendering function
         function drawScene(gl, programInfo, buffers) {
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -221,7 +207,6 @@
             mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -6.0]);
             mat4.rotateY(modelViewMatrix, modelViewMatrix, performance.now() * 0.001);
 
-            // Draw body (cylinder)
             gl.bindBuffer(gl.ARRAY_BUFFER, buffers.body.position);
             gl.vertexAttribPointer(
                 programInfo.attribLocations.vertexPosition,
@@ -248,7 +233,6 @@
 
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 64);
 
-            // Draw ring
             gl.bindBuffer(gl.ARRAY_BUFFER, buffers.ring.position);
             gl.vertexAttribPointer(
                 programInfo.attribLocations.vertexPosition,
@@ -265,7 +249,6 @@
 
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 128);
 
-            // Draw head
             gl.bindBuffer(gl.ARRAY_BUFFER, buffers.head.position);
             gl.vertexAttribPointer(
                 programInfo.attribLocations.vertexPosition,
@@ -283,7 +266,6 @@
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 512);
         }
 
-        // Main function
         function main() {
             const canvas = document.getElementById('glCanvas');
             const gl = initGL(canvas);
@@ -314,7 +296,6 @@
             render();
         }
 
-        // Matrix library (simplified version)
         const mat4 = {
             create: function() {
                 return new Float32Array([
